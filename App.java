@@ -1,4 +1,4 @@
-import javax.print.attribute.standard.OrientationRequested;
+import java.print.attribute.standard.OrientationRequested;
 
 public class App {
     public static void main(String[] args) 
