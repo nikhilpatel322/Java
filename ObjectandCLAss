@@ -1,0 +1,57 @@
+public class SingleFileBookstore {
+
+    static class Book {
+        private String title;
+        private String author;
+        private double price;
+        private int quantity;
+
+        public Book(String title, String author, double price, int quantity) {
+            this.title = title;
+            this.author = author;
+            this.price = price;
+            this.quantity = quantity;
+        }
+
+        public void purchaseBook(int quantityToPurchase) {
+            if (quantityToPurchase <= quantity) {
+                quantity -= quantityToPurchase;
+                System.out.println("Purchase successful! " + quantityToPurchase + " copies of '" + title + "' bought.");
+            } else {
+                System.out.println("Purchase failed! Not enough stock for '" + title + "'. Available quantity: " + quantity);
+            }
+        }
+
+        public void displayDetails() {
+            System.out.println("Title: " + title);
+            System.out.println("Author: " + author);
+            System.out.println("Price: $" + price);
+            System.out.println("Quantity in stock: " + quantity);
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
+    static class Customer {
+        public void purchaseBook(Book book, int quantityToBuy) {
+            System.out.println("Attempting to purchase " + quantityToBuy + " copies of '" + book.getTitle() + "':");
+            book.purchaseBook(quantityToBuy);
+        }
+    }
+
+    public static void main(String[] args) {
+        Book book = new Book("Effective Java", "Joshua Bloch", 45.00, 10);
+
+        Customer customer = new Customer();
+
+        System.out.println("Book details before purchase:");
+        book.displayDetails();
+
+        customer.purchaseBook(book, 5);
+
+        System.out.println("\nBook details after purchase:");
+        book.displayDetails();
+    }
+}
