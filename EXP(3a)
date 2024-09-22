@@ -1,0 +1,58 @@
+class Book {
+    private String title;
+    private String author;
+    private double price;
+    private int quantity;
+
+    public Book(String title, String author, double price, int quantity) {
+        this.title = title;
+        this.author = author;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void purchaseBook(int quantity) {
+        if (quantity <= this.quantity) {
+            this.quantity -= quantity;
+            System.out.println(quantity + " copy(ies) of \"" + title + "\" purchased successfully.");
+        } else {
+            System.out.println("Insufficient stock. Only " + this.quantity + " copy(ies) available for \"" + title + "\".");
+        }
+    }
+
+    public void displayDetails() {
+        System.out.println("Title: " + title);
+        System.out.println("Author: " + author);
+        System.out.println("Price: $" + price);
+        System.out.println("Available Stock: " + quantity);
+        System.out.println("-------------------------------");
+    }
+}
+
+class Customer {
+    private String name;
+
+    public Customer(String name) {
+        this.name = name;
+    }
+
+    public void purchaseBook(Book book, int quantity) {
+        System.out.println(name + " wants to buy " + quantity + " copy(ies) of \"" + book.getTitle() + "\"");
+        book.displayDetails();
+        book.purchaseBook(quantity);
+        System.out.println("After Purchase:");
+        book.displayDetails();
+    }
+}
+
+public class Bookstore {
+    public static void main(String[] args) {
+        Book book1 = new Book("To Kill a Mockingbird", "Harper Lee", 12.99, 5);
+        Customer customer1 = new Customer("John Doe");
+        customer1.purchaseBook(book1, 2);
+    }
+}
