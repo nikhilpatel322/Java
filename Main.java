@@ -1,23 +1,12 @@
-class Box<T> {
-    private T item;
-    
-    public void set(T item) {
-        this.item = item;
-    }
-    
-    public T get() {
-        return item;
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread is running");
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        Box<Integer> intBox = new Box<>();
-        intBox.set(123);
-        System.out.println("Integer Value: " + intBox.get());
-        
-        Box<String> strBox = new Box<>();
-        strBox.set("Hello Generics");
-        System.out.println("String Value: " + strBox.get());
+        MyThread thread = new MyThread();
+        thread.start();  // Start the thread
     }
 }
