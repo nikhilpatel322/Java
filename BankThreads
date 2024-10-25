@@ -1,0 +1,73 @@
+
+
+
+class BankAccount {
+    private int balance = 500;
+
+    public synchronized void deposit(int amount) {
+        balance += amount;
+        System.out.println("Deposited: " + amount + ", Current Balance: " + balance);
+    }
+
+    public synchronized void withdraw(int amount) {
+        if (balance >= amount) {
+            balance -= amount;
+            System.out.println("Withdrew: " + amount + ", Current Balance: " + balance);
+        } else {
+            System.out.println("Withdrawal of " + amount + " failed. Insufficient balance.");
+        }
+    }
+}
+
+class DepositThread implements Runnable {
+    private BankAccount account;
+
+    public DepositThread(BankAccount account) {
+        this.account = account;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            account.deposit(100);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}
+
+class WithdrawalThread extends Thread {
+    private BankAccount account;
+
+    public WithdrawalThread(BankAccount account) {
+        this.account = account;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            account.withdraw(100);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}
+
+public class BankSystem {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount();
+
+        DepositThread depositThread = new DepositThread(account);
+        WithdrawalThread withdrawalThread = new WithdrawalThread(account);
+
+        Thread deposit = new Thread(depositThread);
+        deposit.start();
+        withdrawalThread.start();
+    }
+}
