@@ -1,0 +1,60 @@
+class TicketBooking {
+    private int availableTickets = 100;
+
+    public synchronized void bookTickets(int numberOfTickets) {
+        if (numberOfTickets <= availableTickets) {
+            System.out.println(Thread.currentThread().getName() + " booked " + numberOfTickets + " tickets.");
+            availableTickets -= numberOfTickets;
+            System.out.println("Tickets remaining: " + availableTickets);
+        } else {
+            System.out.println(Thread.currentThread().getName() + " tried to book " + numberOfTickets + " tickets. Not enough tickets available.");
+        }
+    }
+
+    public int getAvailableTickets() {
+        return availableTickets;
+    }
+}
+
+class User extends Thread {
+    private TicketBooking ticketBooking;
+    private int ticketsToBook;
+
+    public User(TicketBooking ticketBooking, int ticketsToBook, String name) {
+        super(name);
+        this.ticketBooking = ticketBooking;
+        this.ticketsToBook = ticketsToBook;
+    }
+
+    @Override
+    public void run() {
+        ticketBooking.bookTickets(ticketsToBook);
+    }
+}
+
+public class ConcertBookingSystem {
+    public static void main(String[] args) {
+        TicketBooking ticketBooking = new TicketBooking();
+
+        User user1 = new User(ticketBooking, 30, "User1");
+        User user2 = new User(ticketBooking, 50, "User2");
+        User user3 = new User(ticketBooking, 25, "User3");
+        User user4 = new User(ticketBooking, 10, "User4");
+
+        user1.start();
+        user2.start();
+        user3.start();
+        user4.start();
+
+        try {
+            user1.join();
+            user2.join();
+            user3.join();
+            user4.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Final tickets remaining: " + ticketBooking.getAvailableTickets());
+    }
+}
