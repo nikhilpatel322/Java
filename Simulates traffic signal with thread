@@ -1,0 +1,96 @@
+class TrafficSignal {
+    private String currentSignal = "RED";
+
+    public synchronized void displayRed() {
+        while (!currentSignal.equals("RED")) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
+        System.out.println("Red Light - STOP");
+        currentSignal = "GREEN";
+        notifyAll();
+    }
+
+    public synchronized void displayGreen() {
+        while (!currentSignal.equals("GREEN")) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
+        System.out.println("Green Light - GO");
+        currentSignal = "YELLOW";
+        notifyAll();
+    }
+
+    public synchronized void displayYellow() {
+        while (!currentSignal.equals("YELLOW")) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
+        System.out.println("Yellow Light - SLOW DOWN");
+        currentSignal = "RED";
+        notifyAll();
+    }
+}
+
+class RedLight extends Thread {
+    private TrafficSignal signal;
+
+    public RedLight(TrafficSignal signal) {
+        this.signal = signal;
+    }
+
+    public void run() {
+        while (true) {
+            signal.displayRed();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {}
+        }
+    }
+}
+
+class GreenLight extends Thread {
+    private TrafficSignal signal;
+
+    public GreenLight(TrafficSignal signal) {
+        this.signal = signal;
+    }
+
+    public void run() {
+        while (true) {
+            signal.displayGreen();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {}
+        }
+    }
+}
+
+class YellowLight extends Thread {
+    private TrafficSignal signal;
+
+    public YellowLight(TrafficSignal signal) {
+        this.signal = signal;
+    }
+
+    public void run() {
+        while (true) {
+            signal.displayYellow();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {}
+        }
+    }
+}
+
+public class TrafficSignalSystem {
+    public static void main(String[] args) {
+        TrafficSignal signal = new TrafficSignal();
+        new RedLight(signal).start();
+        new GreenLight(signal).start();
+        new YellowLight(signal).start();
+    }
+}
