@@ -1,0 +1,40 @@
+class DownloadTask extends Thread {
+    private String fileName;
+    private String fileType;
+
+    public DownloadTask(String fileName, String fileType) {
+        this.fileName = fileName;
+        this.fileType = fileType;
+
+        if (fileType.equalsIgnoreCase("video")) {
+            setPriority(MAX_PRIORITY);
+        } else if (fileType.equalsIgnoreCase("audio")) {
+            setPriority(NORM_PRIORITY);
+        } else {
+            setPriority(MIN_PRIORITY);
+        }
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Starting download of " + fileName + " (" + fileType + ") with priority " + getPriority());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println("Download interrupted for " + fileName);
+        }
+        System.out.println("Completed download of " + fileName + " (" + fileType + ")");
+    }
+}
+
+public class DownloadManager {
+    public static void main(String[] args) {
+        DownloadTask videoDownload = new DownloadTask("Movie.mp4", "video");
+        DownloadTask audioDownload = new DownloadTask("Song.mp3", "audio");
+        DownloadTask documentDownload = new DownloadTask("Report.pdf", "document");
+
+        videoDownload.start();
+        audioDownload.start();
+        documentDownload.start();
+    }
+}
