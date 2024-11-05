@@ -1,0 +1,140 @@
+#include <stdio.h>
+
+#define MAX_SIZE 100
+
+struct CircularList {
+    int data[MAX_SIZE];
+    int head;
+    int tail;
+    int size;
+};
+
+void initialize(struct CircularList* list) {
+    list->head = -1;
+    list->tail = -1;
+    list->size = 0;
+}
+
+int isFull(struct CircularList* list) {
+    return list->size == MAX_SIZE;
+}
+
+int isEmpty(struct CircularList* list) {
+    return list->size == 0;
+}
+
+void insertEnd(struct CircularList* list, int value) {
+    if (isFull(list)) {
+        printf("List is full.\n");
+        return;
+    }
+    if (isEmpty(list)) {
+        list->head = 0;
+    }
+    list->tail = (list->tail + 1) % MAX_SIZE;
+    list->data[list->tail] = value;
+    list->size++;
+}
+
+void insertBeginning(struct CircularList* list, int value) {
+    if (isFull(list)) {
+        printf("List is full.\n");
+        return;
+    }
+    if (isEmpty(list)) {
+        list->head = 0;
+        list->tail = 0;
+    } else {
+        list->head = (list->head - 1 + MAX_SIZE) % MAX_SIZE;
+    }
+    list->data[list->head] = value;
+    list->size++;
+}
+
+void deleteValue(struct CircularList* list, int value) {
+    if (isEmpty(list)) {
+        printf("List is empty.\n");
+        return;
+    }
+    int found = 0, index = list->head, newSize = list->size;
+    for (int i = 0; i < list->size; i++) {
+        if (list->data[index] == value) {
+            found = 1;
+            newSize--;
+        }
+        if (found && i < list->size - 1) {
+            list->data[index] = list->data[(index + 1) % MAX_SIZE];
+        }
+        index = (index + 1) % MAX_SIZE;
+    }
+    if (found) {
+        list->size = newSize;
+        list->tail = (list->head + list->size - 1) % MAX_SIZE;
+        printf("Deleted value %d.\n", value);
+    } else {
+        printf("Value %d not found.\n", value);
+    }
+    if (list->size == 0) {
+        list->head = -1;
+        list->tail = -1;
+    }
+}
+
+void display(struct CircularList* list) {
+    if (isEmpty(list)) {
+        printf("List is empty.\n");
+        return;
+    }
+    int index = list->head;
+    for (int i = 0; i < list->size; i++) {
+        printf("%d ", list->data[index]);
+        index = (index + 1) % MAX_SIZE;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct CircularList list;
+    initialize(&list);
+    int choice, value;
+
+    do {
+        printf("\nCircular Linked List Operations:\n");
+        printf("1. Insert at End\n");
+        printf("2. Insert at Beginning\n");
+        printf("3. Delete Value\n");
+        printf("4. Display List\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert at end: ");
+                scanf("%d", &value);
+                insertEnd(&list, value);
+                break;
+            case 2:
+                printf("Enter value to insert at beginning: ");
+                scanf("%d", &value);
+                insertBeginning(&list, value);
+                break;
+            case 3:
+                printf("Enter value to delete: ");
+                scanf("%d", &value);
+                deleteValue(&list, value);
+                break;
+            case 4:
+                printf("Circular Linked List: ");
+                display(&list);
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                break;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    } while (choice != 5);
+
+    return 0;
+}
