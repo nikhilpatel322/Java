@@ -1,0 +1,191 @@
+#include <stdio.h>
+
+#define MAX_SIZE 100
+
+struct Node {
+    int data;
+    int prev;
+    int next;
+};
+
+struct StaticDoublyLinkedList {
+    struct Node nodes[MAX_SIZE];
+    int head;
+    int tail;
+    int size;
+};
+
+void initialize(struct StaticDoublyLinkedList* list) {
+    list->head = -1;
+    list->tail = -1;
+    list->size = 0;
+    for (int i = 0; i < MAX_SIZE; i++) {
+        list->nodes[i].prev = -1;
+        list->nodes[i].next = -1;
+    }
+}
+
+int isFull(struct StaticDoublyLinkedList* list) {
+    return list->size == MAX_SIZE;
+}
+
+int isEmpty(struct StaticDoublyLinkedList* list) {
+    return list->size == 0;
+}
+
+void insertEnd(struct StaticDoublyLinkedList* list, int value) {
+    if (isFull(list)) {
+        printf("List is full.\n");
+        return;
+    }
+
+    int index = list->size;
+    list->nodes[index].data = value;
+    list->nodes[index].prev = list->tail;
+    list->nodes[index].next = -1;
+
+    if (isEmpty(list)) {
+        list->head = index;
+    } else {
+        list->nodes[list->tail].next = index;
+    }
+    list->tail = index;
+    list->size++;
+}
+
+void insertBeginning(struct StaticDoublyLinkedList* list, int value) {
+    if (isFull(list)) {
+        printf("List is full.\n");
+        return;
+    }
+
+    int index = list->size;
+    list->nodes[index].data = value;
+    list->nodes[index].prev = -1;
+    list->nodes[index].next = list->head;
+
+    if (isEmpty(list)) {
+        list->tail = index;
+    } else {
+        list->nodes[list->head].prev = index;
+    }
+    list->head = index;
+    list->size++;
+}
+
+void deleteValue(struct StaticDoublyLinkedList* list, int value) {
+    if (isEmpty(list)) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    int index = list->head;
+    while (index != -1 && list->nodes[index].data != value) {
+        index = list->nodes[index].next;
+    }
+
+    if (index == -1) {
+        printf("Value %d not found.\n", value);
+        return;
+    }
+
+    if (index == list->head) {
+        list->head = list->nodes[index].next;
+        if (list->head != -1) {
+            list->nodes[list->head].prev = -1;
+        }
+    } else {
+        list->nodes[list->nodes[index].prev].next = list->nodes[index].next;
+    }
+
+    if (index == list->tail) {
+        list->tail = list->nodes[index].prev;
+        if (list->tail != -1) {
+            list->nodes[list->tail].next = -1;
+        }
+    } else {
+        list->nodes[list->nodes[index].next].prev = list->nodes[index].prev;
+    }
+
+    list->size--;
+    printf("Deleted value %d.\n", value);
+}
+
+void displayForward(struct StaticDoublyLinkedList* list) {
+    if (isEmpty(list)) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    int index = list->head;
+    while (index != -1) {
+        printf("%d ", list->nodes[index].data);
+        index = list->nodes[index].next;
+    }
+    printf("\n");
+}
+
+void displayBackward(struct StaticDoublyLinkedList* list) {
+    if (isEmpty(list)) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    int index = list->tail;
+    while (index != -1) {
+        printf("%d ", list->nodes[index].data);
+        index = list->nodes[index].prev;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct StaticDoublyLinkedList list;
+    initialize(&list);
+    int choice, value;
+
+    do {
+        printf("\nDoubly Linked List Operations:\n");
+        printf("1. Insert at End\n");
+        printf("2. Insert at Beginning\n");
+        printf("3. Delete Value\n");
+        printf("4. Display Forward\n");
+        printf("5. Display Backward\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert at end: ");
+                scanf("%d", &value);
+                insertEnd(&list, value);
+                break;
+            case 2:
+                printf("Enter value to insert at beginning: ");
+                scanf("%d", &value);
+                insertBeginning(&list, value);
+                break;
+            case 3:
+                printf("Enter value to delete: ");
+                scanf("%d", &value);
+                deleteValue(&list, value);
+                break;
+            case 4:
+                printf("List (Forward): ");
+                displayForward(&list);
+                break;
+            case 5:
+                printf("List (Backward): ");
+                displayBackward(&list);
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                break;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    } while (choice != 6);
+
+    return 0;
+}
