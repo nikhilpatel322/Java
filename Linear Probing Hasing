@@ -1,0 +1,53 @@
+public class LinearProbingHashTable<Key, Value> {
+    private int size;
+    private int capacity;
+    private Key[] keys;
+    private Value[] values;
+
+    public LinearProbingHashTable(int capacity) {
+        this.capacity = capacity;
+        this.size = 0;
+        keys = (Key[]) new Object[capacity];
+        values = (Value[]) new Object[capacity];
+    }
+
+    private int hash(Key key) {
+        return (key.hashCode() & 0x7fffffff) % capacity;
+    }
+
+    public void put(Key key, Value value) {
+        int i = hash(key);
+        while (keys[i] != null) {
+            if (keys[i].equals(key)) {
+                values[i] = value;
+                return;
+            }
+            i = (i + 1) % capacity;
+        }
+        keys[i] = key;
+        values[i] = value;
+        size++;
+    }
+
+    public Value get(Key key) {
+        int i = hash(key);
+        while (keys[i] != null) {
+            if (keys[i].equals(key))
+                return values[i];
+            i = (i + 1) % capacity;
+        }
+        return null;
+    }
+
+    public boolean contains(Key key) {
+        return get(key) != null;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+}
