@@ -1,54 +1,27 @@
-interface Shape {
-    double area();
-    double perimeter();
-}
+public class Box<T> {
+    private T item;
 
-class Circle implements Shape {
-    private double radius;
-
-    Circle(double radius) {
-        this.radius = radius;
+    // Setter for the item
+    public void set(T item) {
+        this.item = item;
     }
 
-    @Override
-    public double area() {
-        return Math.PI * radius * radius;
-    }
-
-    @Override
-    public double perimeter() {
-        return 2 * Math.PI * radius;
-    }
-}
-
-class Rectangle implements Shape {
-    private double length, width;
-
-    Rectangle(double length, double width) {
-        this.length = length;
-        this.width = width;
-    }
-
-    @Override
-    public double area() {
-        return length * width;
-    }
-
-    @Override
-    public double perimeter() {
-        return 2 * (length + width);
+    // Getter for the item
+    public T get() {
+        return item;
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        Shape circle = new Circle(5);
-        Shape rectangle = new Rectangle(4, 6);
+        // Create a Box for Integer values
+        Box<Integer> intBox = new Box<>();
+        intBox.set(10);  // Set Integer value
+        System.out.println("Integer value: " + intBox.get());
 
-        System.out.println("Circle Area: " + circle.area());
-        System.out.println("Circle Perimeter: " + circle.perimeter());
-
-        System.out.println("Rectangle Area: " + rectangle.area());
-        System.out.println("Rectangle Perimeter: " + rectangle.perimeter());
+        // Create a Box for String values
+        Box<String> strBox = new Box<>();
+        strBox.set("Hello");  // Set String value
+        System.out.println("String value: " + strBox.get());
     }
 }
