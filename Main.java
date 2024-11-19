@@ -1,27 +1,53 @@
-public class Box<T> {
-    private T item;
+class BankAccount {
+    private String accountNumber;
+    private String accountHolderName;
+    private double balance;
 
-    // Setter for the item
-    public void set(T item) {
-        this.item = item;
+    public BankAccount(String accountNumber, String accountHolderName, double balance) {
+        this.accountNumber = accountNumber;
+        this.accountHolderName = accountHolderName;
+        this.balance = balance;
     }
 
-    // Getter for the item
-    public T get() {
-        return item;
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        } else {
+            System.out.println("Deposit amount must be positive.");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && balance >= amount) {
+            balance -= amount;
+        } else if (amount > 0 && balance < amount) {
+            System.out.println("Insufficient balance. Withdrawal denied.");
+        } else {
+            System.out.println("Withdrawal amount must be positive.");
+        }
+    }
+
+    public void displayAccountInfo() {
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Account Holder: " + accountHolderName);
+        System.out.println("Balance: $" + balance);
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        // Create a Box for Integer values
-        Box<Integer> intBox = new Box<>();
-        intBox.set(10);  // Set Integer value
-        System.out.println("Integer value: " + intBox.get());
+        BankAccount account1 = new BankAccount("123456789", "John", 500.0);
+        BankAccount account2 = new BankAccount("987654321", "Jane ", 1000.0);
+        BankAccount account3 = new BankAccount("567890123", "Alice ", 750.0);
 
-        // Create a Box for String values
-        Box<String> strBox = new Box<>();
-        strBox.set("Hello");  // Set String value
-        System.out.println("String value: " + strBox.get());
+        account1.deposit(200);
+        account2.withdraw(150);
+        account3.withdraw(800);  // Should show insufficient balance
+
+        account1.displayAccountInfo();
+        System.out.println();
+        account2.displayAccountInfo();
+        System.out.println();
+        account3.displayAccountInfo();
     }
 }
