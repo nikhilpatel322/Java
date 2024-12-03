@@ -1,54 +1,53 @@
-interface Shape {
-    double area();
-    double perimeter();
-}
+class BankAccount {
+    private String accountNumber;
+    private String accountHolderName;
+    private double balance;
 
-class Circle implements Shape {
-    private double radius;
-
-    Circle(double radius) {
-        this.radius = radius;
+    public BankAccount(String accountNumber, String accountHolderName, double balance) {
+        this.accountNumber = accountNumber;
+        this.accountHolderName = accountHolderName;
+        this.balance = balance;
     }
 
-    @Override
-    public double area() {
-        return Math.PI * radius * radius;
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        } else {
+            System.out.println("Deposit amount must be positive.");
+        }
     }
 
-    @Override
-    public double perimeter() {
-        return 2 * Math.PI * radius;
-    }
-}
-
-class Rectangle implements Shape {
-    private double length, width;
-
-    Rectangle(double length, double width) {
-        this.length = length;
-        this.width = width;
+    public void withdraw(double amount) {
+        if (amount > 0 && balance >= amount) {
+            balance -= amount;
+        } else if (amount > 0 && balance < amount) {
+            System.out.println("Insufficient balance. Withdrawal denied.");
+        } else {
+            System.out.println("Withdrawal amount must be positive.");
+        }
     }
 
-    @Override
-    public double area() {
-        return length * width;
-    }
-
-    @Override
-    public double perimeter() {
-        return 2 * (length + width);
+    public void displayAccountInfo() {
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Account Holder: " + accountHolderName);
+        System.out.println("Balance: $" + balance);
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        Shape circle = new Circle(5);
-        Shape rectangle = new Rectangle(4, 6);
+        BankAccount account1 = new BankAccount("123456789", "John", 500.0);
+        BankAccount account2 = new BankAccount("987654321", "Jane ", 1000.0);
+        BankAccount account3 = new BankAccount("567890123", "Alice ", 750.0);
 
-        System.out.println("Circle Area: " + circle.area());
-        System.out.println("Circle Perimeter: " + circle.perimeter());
+        account1.deposit(200);
+        account2.withdraw(150);
+        account3.withdraw(800);  // Should show insufficient balance
 
-        System.out.println("Rectangle Area: " + rectangle.area());
-        System.out.println("Rectangle Perimeter: " + rectangle.perimeter());
+        account1.displayAccountInfo();
+        System.out.println();
+        account2.displayAccountInfo();
+        System.out.println();
+        account3.displayAccountInfo();
     }
 }
